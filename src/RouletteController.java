@@ -1,8 +1,5 @@
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -18,8 +15,8 @@ class RouletteController {
             @Override
             public void stateChanged(ChangeEvent e) {
                 model.setNumberCount(view.getSlider().getValue());
-                view.getRouletteWheel().updateNumbers(model.getNumberCount());
-                view.getRouletteWheel().repaint();
+                view.getRouletteComponent().updateNumbers(model.getNumberCount());
+                view.getRouletteComponent().repaint();
             }
         });
 
@@ -28,8 +25,8 @@ class RouletteController {
             public void actionPerformed(ActionEvent e) {
                 int result = model.spin();
                 view.setSpin();
-                view.getRouletteWheel().startSpin(result);
-                view.getRouletteWheel().setOnSpinEnd(new Runnable() {
+                view.getRouletteComponent().startSpin(result);
+                view.getRouletteComponent().setOnSpinEnd(new Runnable() {
                     @Override
                     public void run() {
                         view.setResult(result);

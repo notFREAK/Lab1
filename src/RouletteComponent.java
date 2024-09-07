@@ -3,13 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 class RouletteComponent extends JPanel {
     private int currentAngle = 0;
     private int targetAngle = 360;
-    private Timer timer;
     private int numberCount = 10;
     private int[] numbers;
     private Runnable onSpinEnd;
@@ -34,12 +31,14 @@ class RouletteComponent extends JPanel {
     public void startSpin(int targetNumber) {// Обновляем количество чисел
         updateNumbers(numberCount);
         targetAngle = 360 - (int) ((targetNumber - 1 ) / (double) (numberCount) * 360); // Вычисляем целевой угол
-        timer = new Timer(10, new ActionListener() {
-            Random rand = new Random();
-            int round = 360*(1 + rand.nextInt(5)) + currentAngle;
+        // Плавное замедление
+        // Вызов callback после остановки рулетки
+        Timer timer = new Timer(10, new ActionListener() {
+            final Random rand = new Random();
+            final int round = 360 * (1 + rand.nextInt(5)) + currentAngle;
             int time = 1;
             int speed = 10;
-            int exp = round / speed +  time;
+            final int exp = round / speed + time;
 
             @Override
             public void actionPerformed(ActionEvent e) {
