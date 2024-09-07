@@ -15,7 +15,6 @@ class RouletteComponent extends JPanel {
         updateNumbers(numberCount);
     }
 
-    // Обновление чисел на рулетке в зависимости от количества
     public void updateNumbers(int numberCount) {
         this.numberCount = numberCount;
         numbers = new int[numberCount];
@@ -27,12 +26,9 @@ class RouletteComponent extends JPanel {
     public void setOnSpinEnd(Runnable onSpinEnd) {
         this.onSpinEnd = onSpinEnd;
     }
-    // Начало вращения рулетки
-    public void startSpin(int targetNumber) {// Обновляем количество чисел
+    public void startSpin(int targetNumber) {
         updateNumbers(numberCount);
-        targetAngle = 360 - (int) ((targetNumber - 1 ) / (double) (numberCount) * 360); // Вычисляем целевой угол
-        // Плавное замедление
-        // Вызов callback после остановки рулетки
+        targetAngle = 360 - (int) ((targetNumber - 1 ) / (double) (numberCount) * 360);
         Timer timer = new Timer(10, new ActionListener() {
             final Random rand = new Random();
             final int round = 360 * (1 + rand.nextInt(5)) + currentAngle;
@@ -43,13 +39,12 @@ class RouletteComponent extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentAngle = (currentAngle + speed) % 360;
-                speed = Math.max(1, round / (time + exp)); // Плавное замедление
+                speed = Math.max(1, round / (time + exp));
                 time += 10;
                 repaint();
 
                 if (speed == 1 && Math.abs(currentAngle - targetAngle) < 2) {
                     ((Timer) e.getSource()).stop();
-                    // Вызов callback после остановки рулетки
                     if (onSpinEnd != null) {
                         onSpinEnd.run();
                     }
@@ -65,31 +60,29 @@ class RouletteComponent extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int radius = Math.min(getWidth(), getHeight()) / 2 - 30;  // Радиус круга
+        int radius = Math.min(getWidth(), getHeight()) / 2 - 30;
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2;
 
-        // Рисуем круг рулетки
         g2d.drawOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
 
-        // Рисуем стрелку для указания выпавшего числа
         g2d.setColor(Color.RED);
         g2d.fillPolygon(new int[]{centerX, centerX - 5, centerX + 5},
                 new int[]{centerY - radius, centerY - radius - 10, centerY - radius - 10}, 3);
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(0.5F));
-        // Рисуем числа на круге
-        double angleStep = 360.0 / numberCount;  // Шаг между числами по окружности
+
+        double angleStep = 360.0 / numberCount;
 
         for (int i = 0; i < numberCount; i++) {
-            double angle = Math.toRadians(currentAngle + (i) * angleStep - 90);  // Угол для каждого числа
+            double angle = Math.toRadians(currentAngle + (i) * angleStep - 90);
             int textX = (int) (centerX + (radius * 0.9) * Math.cos(angle));
             int textY = (int) (centerY + (radius * 0.9) * Math.sin(angle));
 
             g2d.drawLine( centerX, centerY,
                     (int) (centerX + radius * Math.cos(Math.toRadians(currentAngle + (i) * angleStep - (90+angleStep/2) ))),
                     (int) (centerY + radius * Math.sin(Math.toRadians(currentAngle + (i) * angleStep - (90+angleStep/2) ))));
-            g2d.drawString(String.valueOf(numbers[i]), textX - 5, textY + 5);  // Рисуем число с небольшим смещением для центрирования
+            g2d.drawString(String.valueOf(numbers[i]), textX - 5, textY + 5);
         }
     }
 }
