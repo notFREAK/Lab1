@@ -1,20 +1,26 @@
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class RouletteModel {
-    private static RouletteModel instance;
-    private List<String> rouletteElements; // Список чисел или иконок
+    private int numberCount = 10;
+    private int currentNumber;
 
-    private RouletteModel() {
-        rouletteElements = new ArrayList<>();
-        // Инициализация элементов рулетки
+    public void setNumberCount(int count) {
+        this.numberCount = count;
     }
 
-    public static RouletteModel getInstance() {
-        if (instance == null) {
-            instance = new RouletteModel();
-        }
-        return instance;
+    public int getNumberCount() {
+        return numberCount;
     }
 
-    // Методы для управления элементами рулетки
+    public int spin() {
+        Random random = new Random();
+        currentNumber = random.nextInt(numberCount) + 1;
+        return currentNumber;
+    }
 }
